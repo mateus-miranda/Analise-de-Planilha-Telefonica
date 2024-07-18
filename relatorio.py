@@ -1,6 +1,9 @@
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
+from openpyxl import load_workbook
+from openpyxl.drawing.image import Image
+import matplotlib.pyplot as plt
 
 # Função para processar o arquivo carregado
 def processar_arquivo(caminho_arquivo, caminho_salvar):
@@ -23,8 +26,8 @@ def processar_arquivo(caminho_arquivo, caminho_salvar):
         planilha['Status'] = planilha['Status'].replace(valores_substituir)
 
         # Verificar as condições para determinar o valor da coluna "Tipo" baseado na coluna "Origem" 
-        #Para informar se a ligação é Efetuada ou Recebida
-        # A ligação só é efetuada por um ramal, logo a origem tem que ser um numero de 4 digitos
+        # Para informar se a ligação é Efetuada ou Recebida
+        # A ligação só é efetuada por um ramal, logo a origem tem que ser um número de 4 dígitos
         def determinar_tipo(row):
             if len(str(row['Origem'])) == 4 or row['Origem'] == 7130327062:
                 return 'Efetuada'
@@ -45,10 +48,37 @@ def processar_arquivo(caminho_arquivo, caminho_salvar):
         # Salvar o arquivo processado
         planilha_sem_colunas.to_excel(caminho_salvar, index=False)
 
+        # Adicionar um gráfico na planilha
+        adicionar_grafico(caminho_salvar, planilha_sem_colunas)
+
         # Mostrar mensagem de sucesso
         messagebox.showinfo("Sucesso", f"Planilha salva com sucesso em: {caminho_salvar}")
     except Exception as error:
         messagebox.showerror("Erro", f"Ocorreu um erro durante o processo: {str(error)}")
+
+# Função para adicionar um gráfico na planilha
+def adicionar_grafico(caminho_salvar, planilha):
+    # Criar um gráfico de exemplo
+    grafico = planilha['Status'].value_counts().plot(kind='bar', title='Status das Chamadas')
+    plt.xticks(rotation=0)  # Definir a rotação dos rótulos do eixo X para 0 (horizontal)
+    plt.tight_layout()
+    
+    # Salvar o gráfico como uma imagem
+    caminho_imagem = "grafico.png"
+    plt.savefig(caminho_imagem)
+    plt.close()
+
+    # Carregar a planilha existente
+    workbook = load_workbook(caminho_salvar)
+    # Adicionar uma nova aba
+    aba_grafico = workbook.create_sheet(title="Gráfico")
+
+    # Inserir a imagem do gráfico na nova aba
+    img = Image(caminho_imagem)
+    aba_grafico.add_image(img, 'A1')
+
+    # Salvar a planilha com a nova aba
+    workbook.save(caminho_salvar)
 
 # Função para abrir o diálogo de seleção de arquivo
 def local_arquivo():
@@ -64,7 +94,7 @@ def local_salvar():
 
 # Criar a janela principal
 janela = tk.Tk()
-janela.title("Processador de Planilhas")
+janela.title("Análise de planilha telefônica")
 janela.geometry("600x250")
 
 # Impedir que a janela seja redimensionada
