@@ -77,7 +77,7 @@ def adicionar_grafico(caminho_salvar, planilha):
     img = Image(caminho_imagem)
     aba_grafico.add_image(img, 'A1')
 
-    # Salvar a planilha com a nova aba
+    # Salvar a planilha com a nova
     workbook.save(caminho_salvar)
 
 # Função para abrir o diálogo de seleção de arquivo
