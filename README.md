@@ -28,3 +28,11 @@ Este sistema, desenvolvido em Python, permite carregar uma planilha CSV, process
 ### Adição de Gráfico
 1. Criar Gráfico: Um gráfico de barras mostrando o número de chamadas por status é gerado.
 2. Inserir Gráfico na Planilha: O gráfico é inserido em uma nova aba na planilha Excel.
+
+## Como Usar
+
+1. Execute o script Python.
+2. Uma janela será aberta. Clique em "Procurar Arquivo" para selecionar a planilha CSV a ser processada.
+3. Clique em "Salvar Como" para selecionar o local onde a planilha processada será salva.
+4. Clique em "Processar" para iniciar o processamento da planilha e a geração do gráfico.
+5. A planilha processada e com gráfico será salva no local escolhido, e uma mensagem de sucesso será exibida.
